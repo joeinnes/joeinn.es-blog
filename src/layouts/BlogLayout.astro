@@ -1,0 +1,12 @@
+---
+  let thisWidth = 0;
+  const { title, bg } = Astro.props;
+  import Header from '../components/Header.astro';
+  import ParentLayout from './ParentLayout.astro'
+---
+ <ParentLayout title={title} bg={bg}>
+    <Header />
+  <main class="px-4 pb-8 pt-8 container mx-auto grid place-items-center">
+  <slot />
+  </main>
+ </ParentLayout>

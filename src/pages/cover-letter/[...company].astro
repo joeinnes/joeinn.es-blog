@@ -1,0 +1,46 @@
+---
+// Create static pages
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const companies = await getCollection('companies');
+  const paths = companies.map(company => ({
+    params: { company: company.slug }, props: { company },
+  }));
+  return [...paths, {
+    params: {
+      company: undefined
+    },
+    props: { company: {
+      data: {
+      name: 'Traist',
+      h: 205,
+      s: 81,
+      l: 31,
+      font: '',
+      fontImport: ''
+    } }
+  }
+  }]
+}
+
+// Import components
+import Address from '../../components/Address.astro';
+import CoverLetterLayout from '../../layouts/CoverLetterLayout.astro';
+import Signature from '../../components/Signature.svelte';
+
+// Page setup
+const { company } = Astro.props;
+const { Content } = await company.render();
+
+// Page logic
+const mainBg = company?.data?.h + company?.data?.s + company?.data?.l > 0 ? `hsl(${company?.data?.h}, ${company?.data?.s}%, ${company?.data?.l}%)`: 'hsl(205 81% 31%)';
+const title = `Joe Innes${company?.data?.name ? ' | ' + company.data.name : ''} | Cover Letter`
+---
+
+<CoverLetterLayout title={title} bg={mainBg} company={company}>
+	<Address />
+
+	<Content />
+
+	<Signature client:visible />
+</CoverLetterLayout>

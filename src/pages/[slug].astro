@@ -1,0 +1,72 @@
+---
+import { Picture } from '@astrojs/image/components';
+import dayjs from 'dayjs';
+import BlogLayout from '../layouts/BlogLayout.astro';
+import Signature from '../components/Signature.svelte';
+import { getCollection } from 'astro:content';
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BlogLayout title={"Joe Innes | " + entry.data.title} bg={entry.data.page_bg}>
+  <article class="prose lg:prose-xl prose-headings:font-bold prose-zinc rounded-xl mx-auto shadow-2xl relative overflow-hidden bg-white" style="width: min(65ch, 100%);">
+    	<div
+		class="aspect-[21/9] header-image content not-prose shadow"
+    >
+      <Picture src={entry.data.featured_image
+			? entry.data.featured_image : 'https://source.unsplash.com/random/?' + encodeURIComponent(entry.data.title)} alt={entry.data.title} aspectRatio="21:9" widths={[640, 960, 1200]} fit="cover" sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em" />
+	</div>
+  {entry.data.title_overlays_featured_image ? null :
+  			<hgroup class="content meta">
+				<h1>{entry.data.title}</h1>
+				<small>{dayjs(entry.data.date).format('dddd D MMM YYYY, h:mm a')}</small>
+			</hgroup>}
+      <div class="content">
+        <Content />
+      
+      <div class="flex justify-end" style={`grid-column: 2; color: ${entry.data.page_bg}`}>
+			  <Signature client:visible />
+      </div>
+		</div>
+  </article>
+</BlogLayout>
+
+<style lang="">
+  /* Not sure why I need the empty "" here but if I leave it out, stuff breaks */
+  .content.header-image {
+    @apply py-0;
+  }
+  .content {
+		@apply grid py-8;
+		grid-template-columns: 1fr min(55ch, 100%) 1fr;
+  }
+
+  .content > * {
+    @apply px-4;
+		grid-column: 2;
+  } 
+
+  .content.meta h1 {
+    @apply mb-2;
+  }
+
+  hgroup.content.meta {
+    @apply pb-0;
+  }
+
+  .content > picture {
+    @apply p-0;
+  }
+
+  picture, img, .full-bleed, p:has(img), .content > p:has(img) {
+		@apply max-w-full w-full p-0 rounded-none;
+		grid-column: 1 / -1 !important;
+	}
+</style>

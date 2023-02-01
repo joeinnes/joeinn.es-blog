@@ -1,0 +1,35 @@
+---
+import ParentLayout from './ParentLayout.astro';
+const { title, bg, company } = Astro.props;
+const lightBg = `hsl(${company?.data?.h}, ${company?.data?.s}%, 97%)`;
+const accent = `hsl(${company?.data?.h}, ${company?.data?.s}%, 50%)`;
+const darkText = `hsl(${company?.data?.h}, ${company?.data?.s}%, 15%)`;
+const semiDarkText = `hsl(${company?.data?.h}, ${company?.data?.s}%, 25%)`;
+const font = company?.data?.font || 'inherit';
+const fontImport = company?.data?.fontImport || '';
+import Header from '../components/Header.astro';
+---
+
+<ParentLayout title={title} bg={bg} fontImport={fontImport}>
+  <Header link={`/cv/` + (company?.slug || '')}/>
+  <main class="py-8 px-2">
+  <article
+    class="max-w-[70ch] prose prose-zinc print:prose-sm rounded-xl px-4 md:px-12 py-8 print:py-4 md:mt-0 print:mt-0 mx-auto"
+  >
+    <slot />
+  </article>
+</main>
+</ParentLayout>
+
+<style define:vars={{lightBg, darkText, font, accent, semiDarkText}}>
+  article {
+    background-color: var(--lightBg);
+    color:var(--darkText);
+    font-family: var(--font);
+  }
+  @media print {
+    article {
+      @apply bg-white text-black;
+    }
+  }
+</style>

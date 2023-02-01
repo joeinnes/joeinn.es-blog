@@ -1,0 +1,10 @@
+---
+import ParentLayout from "./ParentLayout.astro";
+import Header from '../components/Header.astro';
+---
+<ParentLayout title="Joe Innes" bg="white">
+  <Header />
+  <main class="py-8 px-2">
+  <slot />
+  </main>
+</ParentLayout>

@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import BlogPostEntry from '../components/BlogPostEntry.svelte';
+
+const blogEntries = await getCollection('blog');
+const sortedBlogEntries = blogEntries.sort((a, b) => {
+	return a.data.date > b.data.date ? -1 : 1
+}).filter(a => !a.data.draft);
+---
+
+<Layout title="Joe Innes" bg="white">
+
+<div class="max-w-[70ch] mx-auto pt-16 lg:pt-0">
+	<div class="mb-8 flex flex-col place-items-center w-full relative">
+    <div class="flex gap-8 place-items-center w-full">
+		<h1 class="text-3xl lg:text-5xl font-bold text-clip pr-4 md:pr-8">Joe Innes's Blog</h1>
+		<div>
+			
+		</div>
+    </div>
+
+	</div>
+
+	<div
+		class="post-list text-ellipsis overflow-hidden divide-y"
+		style="--border-bottom-hover: black"
+	>
+		{sortedBlogEntries.map(blogPostEntry => <BlogPostEntry post={blogPostEntry} />)}
+			<!-- blogPostEntry.data.title?.toLowerCase().indexOf(searchString.toLowerCase()) > -1 && <BlogPostEntry post={blogPostEntry} />-->
+      
+	</div>
+</div>
+
+</Layout>
+
+<style>
+	.post-list {
+		@apply flex flex-col px-4 lg:px-0;
+	}
+	.post-list .post:first-child {
+		@apply pt-0;
+	}
+	.post {
+		@apply flex;
+	}
+	.post-title {
+		@apply font-bold text-xl lg:text-2xl;
+	}
+	.post-date {
+		@apply font-light text-sm text-gray-500;
+	}
+
+	.post-excerpt {
+		@apply font-normal text-gray-700;
+	}
+
+	.hvr-underline-from-left {
+		display: inline-block;
+		vertical-align: middle;
+		-webkit-transform: perspective(1px) translateZ(0);
+		transform: perspective(1px) translateZ(0);
+		box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+		position: relative;
+		overflow: hidden;
+	}
+	.hvr-underline-from-left:before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		left: 0;
+		right: 100%;
+		bottom: 0;
+		background: var(--border-bottom-hover);
+		height: 4px;
+		-webkit-transition-property: right;
+		transition-property: right;
+		-webkit-transition-duration: 0.2s;
+		transition-duration: 0.2s;
+		-webkit-transition-timing-function: ease-out;
+		transition-timing-function: ease-out;
+	}
+	a:hover .hvr-underline-from-left:before,
+	a:focus .hvr-underline-from-left:before,
+	a:active .hvr-underline-from-left:before {
+		right: 0;
+	}
+</style>
