@@ -20,8 +20,9 @@ const { Content } = await entry.render();
     	<div
 		class="aspect-[21/9] header-image content not-prose shadow"
     >
-      <Picture src={entry.data.featured_image
-			? entry.data.featured_image : 'https://source.unsplash.com/random/?' + encodeURIComponent(entry.data.title)} alt={entry.data.title} aspectRatio="21:9" widths={[640, 960, 1200]} fit="cover" sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em" />
+      {entry.data.featured_image ? 
+        <Picture src={entry.data.featured_image} alt={entry.data.title} aspectRatio="21:9" widths={[640, 960, 1200]} fit="cover" sizes="((min-width: 50em) and (max-width: 60em)) 50em, ((min-width: 30em) and (max-width: 50em)) 30em, (max-width: 30em) 20em" />
+        : <img alt={entry.data.title} src={'https://source.unsplash.com/random/?' + encodeURIComponent(entry.data.title)} style="padding: 0px" class="aspect-[21/9] object-cover" />}
 	</div>
   {entry.data.title_overlays_featured_image ? null :
   			<hgroup class="content meta">

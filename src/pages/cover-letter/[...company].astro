@@ -30,17 +30,22 @@ import Signature from '../../components/Signature.svelte';
 
 // Page setup
 const { company } = Astro.props;
-const { Content } = await company.render();
 
 // Page logic
 const mainBg = company?.data?.h + company?.data?.s + company?.data?.l > 0 ? `hsl(${company?.data?.h}, ${company?.data?.s}%, ${company?.data?.l}%)`: 'hsl(205 81% 31%)';
 const title = `Joe Innes${company?.data?.name ? ' | ' + company.data.name : ''} | Cover Letter`
+
+let RenderedContent;
+if (company.render) {
+  const { Content } = await company.render();
+  RenderedContent = Content;
+}
 ---
 
 <CoverLetterLayout title={title} bg={mainBg} company={company}>
 	<Address />
 
-	<Content />
+	{RenderedContent && <RenderedContent />}
 
 	<Signature client:visible />
 </CoverLetterLayout>
